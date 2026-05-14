@@ -15,6 +15,14 @@ class PostQuerySet(models.QuerySet):
         return popular_posts
     
     def fetch_with_comments_count(self):
+        '''
+        Метод, который заменяет 2 annotate() в одном запросе.
+
+        Порядок работы:
+        1. Получает id самых популярных постов
+        2. Получает количество комментариев для этих постов
+        3. Присоединяет количество комментариев к этим постам
+        '''
         most_popular_posts_ids = [post.id for post in self.popular()]
 
         posts_with_comments = Post.objects.filter(
