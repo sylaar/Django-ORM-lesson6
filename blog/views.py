@@ -70,6 +70,7 @@ def index(request):
                                            posts_with_tag=Count('posts')
                                        ))) \
                                    .fetch_with_comments_count() 
+    
 
     most_popular_tags = Tag.objects.popular().annotate(posts_with_tag=Count('posts'))
 
