@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 from django.shortcuts import render
 
 from blog.models import Comment, Post, Tag
@@ -46,25 +46,39 @@ def serialize_tag(tag):
         'posts_with_tag': tag.posts,
     }
 
+def serialize_tag_optimized(tag):
+    return {
+        'title': tag.title,
+        'posts_with_tag': tag.posts_with_tag,
+    }
+
 
 def index(request):
 
     most_popular_posts = Post.objects.popular() \
-                                     .prefetch_related('author', 'tags') \
+                                     .prefetch_related('author', Prefetch(
+                                       'tags',
+                                       queryset=Tag.objects.annotate(
+                                           posts_with_tag=Count('posts')
+                                       ))) \
                                      .fetch_with_comments_count()
 
     most_fresh_posts = Post.objects.order_by('-published_at') \
-                                   .prefetch_related('author', 'tags') \
+                                   .prefetch_related('author', Prefetch(
+                                       'tags',
+                                       queryset=Tag.objects.annotate(
+                                           posts_with_tag=Count('posts')
+                                       ))) \
                                    .fetch_with_comments_count() 
 
-    most_popular_tags = Tag.objects.popular()
+    most_popular_tags = Tag.objects.popular().annotate(posts_with_tag=Count('posts'))
 
     context = {
         'most_popular_posts': [
             serialize_post_optimized(post) for post in most_popular_posts[:5]
         ],
         'page_posts': [serialize_post_optimized(post) for post in most_fresh_posts[:5]],
-        'popular_tags': [serialize_tag(tag) for tag in most_popular_tags[:5]],
+        'popular_tags': [serialize_tag_optimized(tag) for tag in most_popular_tags[:5]],
     }
     return render(request, 'index.html', context)
 

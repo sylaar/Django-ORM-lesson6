@@ -23,7 +23,8 @@ class PostQuerySet(models.QuerySet):
         2. Получает количество комментариев для этих постов
         3. Присоединяет количество комментариев к этим постам
         '''
-        most_popular_posts_ids = [post.id for post in self.popular()]
+        most_popular_posts = self.popular()
+        most_popular_posts_ids = [post.id for post in most_popular_posts]
 
         posts_with_comments = Post.objects.filter(
             id__in=most_popular_posts_ids
@@ -31,9 +32,9 @@ class PostQuerySet(models.QuerySet):
         ids_and_comments = posts_with_comments.values_list('id', 'comments_count')
         count_for_id = dict(ids_and_comments)
 
-        for post in self:
+        for post in most_popular_posts:
             post.comments_count = count_for_id[post.id]
-        return self
+        return most_popular_posts
     
 
 class TagQuerySet(models.QuerySet):
