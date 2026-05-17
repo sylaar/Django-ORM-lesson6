@@ -6,21 +6,26 @@
 
 ## Запуск
 
-Для запуска сайта вам понадобится Python третьей версии.
+Скачайте репозиторий
+```sh
+git clone https://github.com/sylaar/Django-ORM-lesson6.git
+cd Django-ORM-lesson6
+```
 
-Скачайте код с GitHub. Установите зависимости:
-
+Установите зависимости
 ```sh
 pip install -r requirements.txt
 ```
 
-Создайте базу данных SQLite
+Скачайте [архив с данными](https://dvmn.org/media/modules_dist/sensive-blog-data.zip).
+Положите базу данных и media из архива в папку с кодом рядом с `manage.py`
 
+Примените миграции
 ```sh
 python3 manage.py migrate
 ```
 
-Запустите разработческий сервер
+Запустите сервер
 
 ```
 python3 manage.py runserver
@@ -35,13 +40,3 @@ python3 manage.py runserver
 - `SECRET_KEY` — секретный ключ проекта
 - `DATABASE_FILEPATH` — полный путь к файлу базы данных SQLite, например: `/home/user/schoolbase.sqlite3`
 - `ALLOWED_HOSTS` — см [документацию Django](https://docs.djangoproject.com/en/5.2/ref/settings/#allowed-hosts)
-
-
-## Цели проекта
-
-Код написан в учебных целях — для курса по Python и веб-разработке на сайте [Devman](https://dvmn.org).
-
-В частности, репозиторий используется:
-
-- В уроке "Оптимизируем сайт" курса [Знакомство с Django: ORM](https://dvmn.org/modules/django-orm/).
-- В туториале [Превью для ImageField в админке](https://devman.org/encyclopedia/django/how-to-setup-image-preview/)
