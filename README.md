@@ -18,7 +18,7 @@ pip install -r requirements.txt
 ```
 
 Скачайте [архив с данными](https://dvmn.org/media/modules_dist/sensive-blog-data.zip).
-Положите базу данных и media из архива в папку с кодом рядом с `manage.py`
+Положите `db.sqlite3` и `media` из архива в папку с кодом рядом с `manage.py`
 
 Примените миграции
 ```sh
