@@ -96,7 +96,7 @@ def post_detail(request, slug):
 def tag_filter(request, tag_title):
     tag = get_object_or_404(Tag, title=tag_title)
 
-    most_popular_tags = Tag.objects.popular().annotate(posts_with_tag=Count('posts'))[:5]
+    most_popular_tags = Tag.objects.popular().annotate(posts_with_tag=Count('posts'))
 
     most_popular_posts = Post.objects.popular() \
                                      .prefetch_and_annotate_post() \
@@ -108,7 +108,7 @@ def tag_filter(request, tag_title):
 
     context = {
         'tag': tag.title,
-        'popular_tags': [serialize_tag_optimized(tag) for tag in most_popular_tags],
+        'popular_tags': [serialize_tag_optimized(tag) for tag in most_popular_tags[:5]],
         'posts': [serialize_post_optimized(post) for post in related_posts[:20]],
         'most_popular_posts': [
             serialize_post_optimized(post) for post in most_popular_posts[:5]
