@@ -4,20 +4,21 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 
 
-
 class PostQuerySet(models.QuerySet):
     def prefetch_and_annotate_post(self):
-        qs = self.prefetch_related('author', Prefetch(
-                                       'tags',
-                                       queryset=Tag.objects.annotate(
-                                           posts_with_tag=Count('posts')
-                                       )))
+        qs = self.prefetch_related(
+            'author',
+            Prefetch(
+                'tags',
+                queryset=Tag.objects.annotate(posts_with_tag=Count('posts'))))
         return qs
-    
+
     def popular(self):
-        popular_posts = self.annotate(likes_count=Count('likes')).order_by('-likes_count')
+        popular_posts = self.annotate(
+            likes_count=Count('likes')
+            ).order_by('-likes_count')
         return popular_posts
-    
+
     def fetch_with_comments_count(self):
         '''
         Метод, который заменяет 2 annotate() в одном запросе.
@@ -33,13 +34,16 @@ class PostQuerySet(models.QuerySet):
         posts_with_comments = Post.objects.filter(
             id__in=most_popular_posts_ids
         ).annotate(comments_count=Count('comments'))
-        ids_and_comments = posts_with_comments.values_list('id', 'comments_count')
+        ids_and_comments = posts_with_comments.values_list(
+            'id',
+            'comments_count'
+        )
         count_for_id = dict(ids_and_comments)
 
         for post in most_popular_posts:
             post.comments_count = count_for_id[post.id]
         return most_popular_posts
-    
+
 
 class TagQuerySet(models.QuerySet):
     def popular(self):
@@ -47,6 +51,7 @@ class TagQuerySet(models.QuerySet):
             related_post_count=Count('posts')
         ).order_by('-related_post_count')
         return popular_tags
+
 
 class Post(models.Model):
     objects = PostQuerySet.as_manager()
