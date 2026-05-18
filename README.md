@@ -12,6 +12,12 @@ git clone https://github.com/sylaar/Django-ORM-lesson6.git
 cd Django-ORM-lesson6
 ```
 
+Создайте виртуальное окружение
+```sh
+python3 -m venv venv
+source venv/bin/activate
+```
+
 Установите зависимости
 ```sh
 pip install -r requirements.txt
